@@ -43,7 +43,7 @@ user is authenticated.
 
 ```php
 if ($user = service('auth')->user()) {
-	echo 'Logged in!';
+    echo 'Logged in!';
 }
 ```
 
@@ -54,8 +54,83 @@ You may also load the helper to use the `user_id()` convenience method as outlin
 helper('auth');
 
 if ($userId = user_id()) {
-	return true;
+    return true;
 }
 
 throw new RuntimeException('You must be authenticated!');
+```
+
+## Users
+
+`Imposter` comes with a minimal set of classes to be fully compatible with
+[Tatter\Users](https://github.com/tattersoftware/codeigniter4-users). This means that any
+project or library which uses the interfaces from `Tatter\Users` can be tested using
+`Imposter` without the need of an actual authentication library or even a database.
+
+### User Entity
+
+The `Tatter\Imposter\Entities\User` entity class implements all three entity interfaces from
+`Tatter\Users`: `UserEntity`, `HasGroup`, and `HasPermission`. Use it like any regular entity,
+except that the `$groups` and `$permissions` atributes are simple CSV casts for storing your
+entity relationships:
+```php
+$user = new \Tatter\Imposter\Entities\User();
+$user->groups = ['Administrators', 'Editors'];
+```
+
+### Imposter Factory
+
+The `ImposterFactory` class allows `UserProvider` to use the `Imposter` classes automatically
+during testing. To enable `ImposterFactory` add it to the list of providers during
+your test's `setUp` or `setUpBeforeClass` phase:
+```php
+<?php
+
+use CodeIgniter\Test\CIUnitTestCase;
+use Tatter\Imposter\Factories\ImposterFactory;
+use Tatter\Users\UserProvider;
+
+final class UserWidgetTest extends CIUnitTestCase
+{
+    public static setUpBeforeClass(): void
+    {
+        UserProvider::add(ImposterFactory::class, ImposterFactory::class);
+    }
+...
+```
+
+Because `Imposter` is a database-free solution `UserFactory` has its own local storage for
+`User` entities. Use the static methods to manipulate the storage to stage your tests:
+
+* `index()` - Gets the current index of the store
+* `add(User $user)` - Adds a `Tatter\Imposter\Entities\User` object to the store, returning the new index
+* `reset()` - Resets the store and the index
+* `fake()` - Returns a new `Tatter\Imposter\Entities\User` object using Faker's generated data (note: not added to the store)
+
+For example:
+```php
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $user = ImposterFactory::fake();
+        $user->permissions = ['widgets.create'];
+        UserFactory::add($user);
+
+        $this->userId = ImposterFactory::index();
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        ImposterFactory::reset();
+    }
+
+    public testUserCanCreateWidget()
+    {
+        $user = service('users')->findById($this->userId);
+        service('auth')->login($user);
+        ...
 ```
