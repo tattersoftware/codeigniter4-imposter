@@ -92,9 +92,9 @@ use Tatter\Users\UserProvider;
 
 final class UserWidgetTest extends CIUnitTestCase
 {
-    public static setUpBeforeClass(): void
+    public static function setUpBeforeClass(): void
     {
-        UserProvider::add(ImposterFactory::class, ImposterFactory::class);
+        UserProvider::addFactory(ImposterFactory::class, ImposterFactory::class);
     }
 ...
 ```
