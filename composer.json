@@ -19,7 +19,8 @@
         }
     ],
     "require": {
-        "php": "^7.3 || ^8.0"
+        "php": "^7.3 || ^8.0",
+        "tatter/users": "^1.2"
     },
     "provide": {
         "codeigniter4/authentication-implementation": "1.0"
