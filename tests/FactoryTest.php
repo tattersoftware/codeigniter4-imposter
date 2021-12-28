@@ -22,21 +22,21 @@ final class FactoryTest extends FactoryTestCase
         ImposterFactory::add($this->user);
     }
 
-	public function testIndex()
-	{
-		$index = ImposterFactory::index();
+    public function testIndex()
+    {
+        $index = ImposterFactory::index();
 
         ImposterFactory::add(ImposterFactory::fake());
 
-		$this->assertSame($index + 1, ImposterFactory::index());
-	}
+        $this->assertSame($index + 1, ImposterFactory::index());
+    }
 
-	public function testReset()
-	{
+    public function testReset()
+    {
         ImposterFactory::add(ImposterFactory::fake());
-		$this->assertGreaterThan(0, ImposterFactory::index());
+        $this->assertGreaterThan(0, ImposterFactory::index());
 
-		ImposterFactory::reset();
-		$this->assertSame(0, ImposterFactory::index());
-	}
+        ImposterFactory::reset();
+        $this->assertSame(0, ImposterFactory::index());
+    }
 }

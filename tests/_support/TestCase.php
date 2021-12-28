@@ -17,7 +17,7 @@ abstract class TestCase extends CIUnitTestCase
 
     public static function setUpBeforeClass(): void
     {
-    	helper(['auth']);
+        helper(['auth']);
     }
 
     protected function setUp(): void
