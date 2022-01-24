@@ -14,7 +14,9 @@ class User extends Entity implements HasGroup, HasPermission
         'deleted_at',
     ];
     protected $attributes = [
-        'id' => null,
+        'id'          => null,
+        'groups'      => '',
+        'permissions' => '',
     ];
     protected $casts = [
         'groups'      => 'csv',
