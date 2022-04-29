@@ -9,7 +9,6 @@ use Webmozart\Glob\Glob;
 
 return static function (Configuration $config): Configuration {
     return $config
-        ->addNamedFilter(NamedFilter::fromString('tatter/users'))
         ->setAdditionalFilesFor('codeigniter4/framework', [
             ...Glob::glob(__DIR__ . '/vendor/codeigniter4/framework/system/Helpers/*.php'),
         ]);
